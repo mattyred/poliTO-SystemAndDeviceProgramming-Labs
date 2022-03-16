@@ -31,22 +31,22 @@ int main(int argc, char* argv[]){
 									&p.register_number,
 									p.surname,
 									p.name,
-									&p.mark) != EOF){
-		// printf("%d %ld %s %s %d\n",p.ID,p.register_number,p.surname,p.name,p.mark);							
+									&p.mark) != EOF){						
 		nW = write (fd_binary_file, &p, sizeof(struct person_t));								
 	}
 	
 	close(fd_binary_file);
 	fd_binary_file = open (argv[2], O_RDONLY); // Open file2 as a binary file -> fd_binary_file
 
-	fp_out_text_file = fopen(argv[3], "r"); // Open file3 as a text file  -> fp_out_text_file
-	printf("Content of the binary file: \n");
+	fp_out_text_file = fopen(argv[3], "w+"); // Open file3 as a text file  -> fp_out_text_file
 
-	while ( (nR = read (fd_binary_file, buf, BUFFSIZE)) > 0 ) {
-		printf("%c",buf[i++]);
+	while ( (nR = read (fd_binary_file, &p, sizeof(struct person_t)) > 0) ) {
+		fprintf(fp_out_text_file,"%d %ld %s %s %d\n",p.ID, p.register_number, p.surname, p.name, p.mark);
 	}
 	
 
 	return 0;
 		
 } 
+
+
