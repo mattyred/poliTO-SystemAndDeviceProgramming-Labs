@@ -37,7 +37,8 @@ void visit(DIR* dp1, DIR* dp2, char* path_dir1, char* path_dir2){
 			// obtain information about path_dir1/object in dir_1
 			lstat(path_dir1_obj, &buf);
 			
-			if(S_ISDIR(buf.st_mode) != 0){ // path_dir1/object is a directory			
+			if(S_ISDIR(buf.st_mode) != 0){ // path_dir1/object is a directory		
+					
 				printf("Current name D: '%s'\n", obj);
 				
 				// create the directory inside the path of dir_2
@@ -58,9 +59,6 @@ void visit(DIR* dp1, DIR* dp2, char* path_dir1, char* path_dir2){
 				write(fd, obj, sizeof(obj));
 				//write(fd, " ", sizeof(char *));
 				write(fd, &size_of_file, sizeof(off_t));
-				
-				strcpy(path_dir1, path_dir1_obj); 
-				strcpy(path_dir2, path_dir2_obj); 
 			}
 		}else{ // directory . or ..
 			continue;	
@@ -98,7 +96,7 @@ int main(int argc, char* argv[]){
 		exit(1);
 	}
 	
-
+	printf("Current name D: '%s'\n", dir_1);
 	visit(dp1, dp2, dir_1, dir_2);
 	return 0;
 }
