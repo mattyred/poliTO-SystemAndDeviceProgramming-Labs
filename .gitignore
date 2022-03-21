@@ -1,1 +1,5 @@
+# ignore all objects files
+**/*.o
 
+# ignore folders inside LABQ_x created for the exercises
+**/dir_*
