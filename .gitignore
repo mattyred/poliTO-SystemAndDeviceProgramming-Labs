@@ -3,3 +3,6 @@
 
 # ignore folders inside LABQ_x created for the exercises
 **/dir_*
+
+# remove specific files
+LabQ_02/btt
