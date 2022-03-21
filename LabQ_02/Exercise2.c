@@ -16,6 +16,29 @@ struct person_t{
 	char name[MAXC];
 	int mark;
 };
+
+/*
+ * Locks the region of the file descriptor fd 
+ * Use cmd: F_SETLK
+ * |	|
+ * |	|
+ * |	|
+ * |    | <- whence + offset(start) = staring point of the lock
+ * 
+ * To unlock a region we can call lock_region passing F_UNLK to cmd
+ */
+int lock_region(int fd, int cmd, int type, off_t offset, int whence, off_t len){
+	
+		struct flock lock;
+		
+		lock.l_type = type; // shared read lock: F_RDLCK, exclusive write: F_WRCLK, unlock: F:UNLCK
+		lock.l_start = offset; // relative to whence
+		lock.l_whence = whence; // SEEK_SET, SEEK_CUR, SEEK_END
+		lock.l_len = len; // in bytes, 0 means lock to EOF
+		
+		return(fcntl(fd, cmd, &lock));
+}
+
 int main(int argc, char* argv[]){
 	
 	char option;
@@ -39,9 +62,23 @@ int main(int argc, char* argv[]){
 			// Compute the offset
 			off_t offset = (n-1) * sizeof(struct person_t);
 
-			// Read from the file the student with ID==n
+			// Seek the row with ID==n
 			lseek(fd, offset, SEEK_SET);
+			
+			// Lock the line before reading
+			if(lock_region(fd, F_SETLK, F_RDLCK, offset, SEEK_SET, sizeof(struct person_t)) == -1){ // Go to SEEK_SET + offset
+																									// and locks sizeof(struct person_t) bytes
+				printf("Error on locking");
+			}
+			  
 			nR = read(fd, &p, sizeof(struct person_t));
+			
+			// Unlock the read line
+			if(lock_region(fd, F_SETLK, F_UNLCK, offset, SEEK_SET, sizeof(struct person_t)) == -1){
+				printf("Error on unlocking");
+			}
+			
+			// Print out the results
 			printf("Row with index %d: ", n);
 			printf("%d %ld %s %s %d\n",p.id, p.reg_num, p.surname, p.name, p.mark); 
 			

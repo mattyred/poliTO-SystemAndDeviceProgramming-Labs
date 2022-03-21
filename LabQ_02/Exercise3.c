@@ -10,6 +10,7 @@
 
 #define MAXC 31
 
+
 void visit(DIR* dp1, DIR* dp2, char* path_dir1, char* path_dir2){
 	struct dirent *dirp1, *dirp2;
 	char path_dir1_obj[MAXC], obj[MAXC], path_dir2_obj[MAXC];
