@@ -2,7 +2,7 @@
 **/*.o
 
 #ingore ~ files
-**/*.~
+**/*~
 
 # ignore folders inside LABQ_x created for the exercises
 **/dir_*
