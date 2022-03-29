@@ -15,42 +15,45 @@ struct person_t{
   long int mat_number;
   char name[MAX];
   char surname[MAX];
-  char mark;
+  int mark;
 };
 struct thread_args{
-  char* file;
+  void* file;
   size_t size;
 };
 
 void * thread_function1(void * args){
   struct thread_args *targ;
-  int i;
+  int i,j,k,start;
   struct person_t p;
   long int target_field;
   //char * line = (char *)sizeof((int)targ->size * sizeof(char)); doesn't work
   char line[MAX];
   char c, next;
-
+  char* src;
   targ = (struct thread_args *)args;
-
-  for(i=0;i<targ->size;i++){ // i have to add an external for to iterate over lines
-    c = targ->file[i];
-    if(c=='\n'){ // new line
-      line[i]='\0';
-      sscanf(line,"%d %ld %s %s %d", &p.ID, &p.mat_num, p.name, p.surname, &p.mark);
-      p.mat_num++;
-      // Idea: convert the modified struct into a string and the copy all the characters
-      // inside the file array. 
-      
-    }else{
-      line[i] = c;
-    }
+  src = (char *)targ->file;
+  k=0;
+  start=0;
+  for(j=0;j<targ->size;j++){
+      c = src[j];
+      if(c=='\n'){ // new line
+	line[k]='\0';
+	sscanf(line,"%d %ld %s %s %d", &p.ID,&p.mat_number,p.name,p.surname,&p.mark);
+	target_field = p.mat_number + 1;
+	printf("%ld\n",target_field);
+	sprintf(src+start,"%d %ld %s %s %d", p.ID, target_field, p.name, p.surname, p.mark);
+	k=0;
+	start = j+1;
+      }else{
+	line[k++] = c;
+      }
   }
 
-  
-  
-  
-
+   printf("Content of the file[MOD BY T1]: \n");
+   for(i=0;i<targ->size;i++){
+     printf("%c",*(src+i));
+   }
 }
 
 void * thread_function2(void * args){
@@ -75,9 +78,9 @@ int main(int argc, char* argv[]){
   void * status;
 
   /* Memory mapping the file */
-  fdin = open(argv[1], O_RDONLY);
+  fdin = open(argv[1], O_RDWR);
   fstat(fdin, &sbuf);
-  if((src_void = mmap(0,sbuf.st_size,PROT_READ,MAP_SHARED,fdin,0)) == MAP_FAILED){
+  if((src_void = mmap(0,sbuf.st_size,PROT_READ|PROT_WRITE,MAP_SHARED,fdin,0)) == MAP_FAILED){
      printf("error");
      exit(0);
   }
@@ -88,7 +91,7 @@ int main(int argc, char* argv[]){
   }
 
   /* Create the threads */
-  targ.file = src_char;
+  targ.file = src_void;
   targ.size = sbuf.st_size;
   pthread_create(&tids[0], NULL, thread_function1, (void *)&targ);
   pthread_create(&tids[1], NULL, thread_function2, (void *)&targ);
