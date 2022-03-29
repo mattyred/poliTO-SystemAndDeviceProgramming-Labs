@@ -8,7 +8,7 @@
 #include <sys/stat.h>
 #include <pthread.h>
 
-#define MAX 50
+#define MAX 100
 
 struct person_t{
   int ID;
@@ -41,8 +41,9 @@ void * thread_function1(void * args){
 	line[k]='\0';
 	sscanf(line,"%d %ld %s %s %d", &p.ID,&p.mat_number,p.name,p.surname,&p.mark);
 	target_field = p.mat_number + 1;
-	printf("%ld\n",target_field);
-	sprintf(src+start,"%d %ld %s %s %d", p.ID, target_field, p.name, p.surname, p.mark);
+	sprintf(line,"%d %ld %s %s %d",p.ID,target_field,p.name,p.surname,p.mark);
+	sprintf(src+start,"%s", line);
+	*(src+start+k) = '\n';
 	k=0;
 	start = j+1;
       }else{
