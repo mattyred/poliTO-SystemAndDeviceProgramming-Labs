@@ -22,12 +22,26 @@ struct thread_args{
   size_t size;
 };
 
+void increment_field_line(char * file,int offset,int lastindex,int field,char * line){
+  struct person_t p;
+  int target_field;
+  sscanf(line,"%d %ld %s %s %d", &p.ID,&p.mat_number,p.name,p.surname,&p.mark);
+
+  if(field==1){ // first thread
+    target_field = p.mat_number+1;
+    sprintf(line,"%d %ld %s %s %d",p.ID,target_field,p.name,p.surname,p.mark);
+  }else{ // second thread
+    target_field = p.mark+1;
+    sprintf(line,"%d %ld %s %s %d",p.ID,p.mat_number,p.name,p.surname,target_field);
+  }
+  sprintf(file+offset,"%s", line);
+  *(file+offset+lastindex)='\n';
+}
 void * thread_function1(void * args){
   struct thread_args *targ;
   int i,j,k,start;
   struct person_t p;
   long int target_field;
-  //char * line = (char *)sizeof((int)targ->size * sizeof(char)); doesn't work
   char line[MAX];
   char c, next;
   char* src;
@@ -39,32 +53,44 @@ void * thread_function1(void * args){
       c = src[j];
       if(c=='\n'){ // new line
 	line[k]='\0';
-	sscanf(line,"%d %ld %s %s %d", &p.ID,&p.mat_number,p.name,p.surname,&p.mark);
-	target_field = p.mat_number + 1;
-	sprintf(line,"%d %ld %s %s %d",p.ID,target_field,p.name,p.surname,p.mark);
-	sprintf(src+start,"%s", line);
-	*(src+start+k) = '\n';
+        increment_field_line(src,start,k,1,line);
 	k=0;
 	start = j+1;
       }else{
 	line[k++] = c;
       }
   }
-
-   printf("Content of the file[MOD BY T1]: \n");
-   for(i=0;i<targ->size;i++){
-     printf("%c",*(src+i));
-   }
 }
 
 void * thread_function2(void * args){
   struct thread_args *targ;
-  int i;
-
+  int j,i,start,length,target_field,k;
+  char c;
+  char * src;
+  char line[MAX];
+  struct person_t p;
   targ = (struct thread_args *)args;
+  src = (char *)targ->file;
+ 
+  for(j=targ->size-2;j>=0;j--){
+    c = src[j];
+    if(c=='\n' || j==0){ // Go back till i find \n or beggining of file
+      start = (c=='\n')?j+1:j;
 
-  
+      // Copy the content of the line inside a string
+      for(i=0,k=start;;k++){
+	if(src[k]=='\n' || src[k]==EOF){ // go on till find \n or the file is finished
+	  line[i]='\0';
+	  break;
+	}
+	line[i++] = src[k];
+      }
 
+      // Modify the content of the line 
+      increment_field_line(src,start,i,2,line);
+    }
+
+  }
 }
 
 int main(int argc, char* argv[]){
@@ -86,10 +112,6 @@ int main(int argc, char* argv[]){
      exit(0);
   }
   char* src_char = (char *)src_void; // cast to char pointer (array of char)
-  printf("Content of the file: \n");
-  for(i=0;i<sbuf.st_size;i++){
-    printf("%c",*(src_char+i));
-  }
 
   /* Create the threads */
   targ.file = src_void;
