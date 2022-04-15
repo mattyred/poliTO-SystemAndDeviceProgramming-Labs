@@ -139,20 +139,10 @@ void * sum_with_gap(void * arg){
 int * random_array(int dim){
     int i;
     int * v = (int *)malloc(dim * sizeof(int));
-    /*
     srand(time(NULL));
     for(i=0;i<dim;i++){
         v[i] = (int)(rand() % 9) + 1;
-    } */
-    v[0]=2;
-    v[1]=4;
-    v[2]=6;
-    v[3]=1;
-    v[4]=3;
-    v[5]=5;
-    v[6]=8;
-    v[7]=7;
-
+    } 
     return v;
 }
 
