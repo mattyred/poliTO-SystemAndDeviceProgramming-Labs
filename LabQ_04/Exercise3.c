@@ -44,6 +44,7 @@ barrier_t * bar;
 sem_t sem_compare;
 
 int num_active_reading_threads;
+int terminate = 0;
 int main(int argc, char* argv[]){
     int fd_pipe[2];
     int num_reading_threads;
@@ -90,6 +91,9 @@ int main(int argc, char* argv[]){
         pthread_join(reading_threads[i], &status);
     }
     pthread_join(comparing_thread, &status);
+    if(terminate == 1){
+        printf("Directories not equal\n");
+    }
 
     return 0;
 }
@@ -97,14 +101,22 @@ int main(int argc, char* argv[]){
 void * compare_entries(void * arg){
     struct t_compare_arg * args;
     int fd_r, nb, j;
-    char s[MAXC];
+    char s[MAXC], previous_s[MAXC];
+    int first;
 
     args = (struct t_compare_arg *)arg;
     fd_r = args->fd_r;
     while(1){
         sem_wait(&sem_compare); // unlocked by the last reading thread
+        first = 1;
         for(j=0;j<num_active_reading_threads;j++){ // for each active reading thread
             nb = read(fd_r, s, sizeof(s));
+            if(first!=1 && strcmp(s, previous_s) != 0){
+                terminate = -1;
+                printf("Not equal\n");
+            }    
+            strcpy(previous_s, s);
+            first = 0;
             printf("Read %d: %s\n",nb,s);
         }
         // Final part of barrier 1: unlock all reading threads
@@ -170,6 +182,14 @@ void * visit_directory(void * arg){
             }
             pthread_mutex_unlock(&bar->mutex);
             sem_wait(&bar->sem2);
+
+            // check if terminate == 1 exit with failure
+            if(terminate == -1){
+
+                printf("here");
+                num_active_reading_threads--;
+                pthread_exit(NULL);
+            }
         }
     }
     pthread_exit(NULL);
