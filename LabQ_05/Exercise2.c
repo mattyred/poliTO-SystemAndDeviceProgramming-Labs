@@ -37,13 +37,13 @@ int main(int argc, char* argv[]){
 
     struct t_args * arg;
     pthread_t * threads;
-    int num_input_files = argc-2;
+    int num_input_files = argc-1;
 
     input_fd = (int *)malloc(num_input_files * sizeof(int));
     arg = (struct t_args *)malloc(num_input_files * sizeof(struct t_args));
     threads = (pthread_t *)malloc(num_input_files * sizeof(pthread_t));
     // Read input parameters
-    for(i=1, j=0;i<=argc-2;i++, j++){
+    for(i=1, j=0;i<=num_input_files;i++, j++){
         arg[j].fd = open(argv[i], O_RDONLY);
         pthread_create(&threads[j], NULL, sort_file, (void*)&arg[j]);
     }
@@ -57,6 +57,7 @@ int main(int argc, char* argv[]){
         dim1 = dim2 + dim1;
         a1 = a3;
     }
+    print_array(a3, dim1);
     
     
     
@@ -75,15 +76,15 @@ void sorted_merge(int * a1, int dim1, int * a2, int dim2, int * a3){
             }
             continue;
         
-        }else if(i >= dim1 || j >= dim2){
+        }else{
             if(i >= dim1){
                 a3[k++] = a2[j++];
             }else if(j >= dim2){
                 a3[k++] = a1[i++];
             }
-        }else if(i >= dim1 && j >= dim2){
-            printf("here");// TODO: non entra qui
-            break;
+
+            if(i >= dim1 && j >= dim2)
+                break;
         } 
     }
     return;
