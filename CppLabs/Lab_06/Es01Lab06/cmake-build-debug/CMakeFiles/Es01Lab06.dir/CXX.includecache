@@ -1,0 +1,34 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/mattiarosso/Desktop/LM-I anno-II semestre/System_and_device_programming/Quer/poliTO-SystemAndDeviceProgramming-Labs/CppLabs/Lab_06/Es01Lab06/StackClass.cpp
+StackClass.h
+/Users/mattiarosso/Desktop/LM-I anno-II semestre/System_and_device_programming/Quer/poliTO-SystemAndDeviceProgramming-Labs/CppLabs/Lab_06/Es01Lab06/StackClass.h
+iosfwd
+-
+iostream
+-
+exception
+-
+
+/Users/mattiarosso/Desktop/LM-I anno-II semestre/System_and_device_programming/Quer/poliTO-SystemAndDeviceProgramming-Labs/CppLabs/Lab_06/Es01Lab06/StackClass.h
+vector
+-
+iosfwd
+-
+
+/Users/mattiarosso/Desktop/LM-I anno-II semestre/System_and_device_programming/Quer/poliTO-SystemAndDeviceProgramming-Labs/CppLabs/Lab_06/Es01Lab06/main.cpp
+iostream
+-
+StackClass.h
+/Users/mattiarosso/Desktop/LM-I anno-II semestre/System_and_device_programming/Quer/poliTO-SystemAndDeviceProgramming-Labs/CppLabs/Lab_06/Es01Lab06/StackClass.h
+StackClass.cpp
+/Users/mattiarosso/Desktop/LM-I anno-II semestre/System_and_device_programming/Quer/poliTO-SystemAndDeviceProgramming-Labs/CppLabs/Lab_06/Es01Lab06/StackClass.cpp
+vector
+-
+
