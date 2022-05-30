@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/mattiarosso/Desktop/LM-I anno-II semestre/System_and_device_programming/Quer/poliTO-SystemAndDeviceProgramming-Labs/CppLabs/Lab_07/Exercise_B/main.cpp
+iostream
+-
+thread
+/Users/mattiarosso/Desktop/LM-I anno-II semestre/System_and_device_programming/Quer/poliTO-SystemAndDeviceProgramming-Labs/CppLabs/Lab_07/Exercise_B/thread
+future
+/Users/mattiarosso/Desktop/LM-I anno-II semestre/System_and_device_programming/Quer/poliTO-SystemAndDeviceProgramming-Labs/CppLabs/Lab_07/Exercise_B/future
+string
+/Users/mattiarosso/Desktop/LM-I anno-II semestre/System_and_device_programming/Quer/poliTO-SystemAndDeviceProgramming-Labs/CppLabs/Lab_07/Exercise_B/string
+
